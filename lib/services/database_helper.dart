@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:convert';
+import 'package:macro_tracker/models/meal_entry.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -44,8 +46,20 @@ class DatabaseHelper {
     );
     ''';
 
+    const mealEntryTable = '''
+    CREATE TABLE meal_entries (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      foods TEXT NOT NULL,
+      carb REAL NOT NULL,
+      fat REAL NOT NULL,
+      protein REAL NOT NULL
+    );
+    ''';
+
     await db.execute(foodTable);
     await db.execute(macroTable);
+    await db.execute(mealEntryTable);
   }
 
   Future<int> insertFood(Food food) async {
@@ -92,5 +106,57 @@ class DatabaseHelper {
   Future<void> clearDailyMacros() async {
     final db = await instance.database;
     await db.delete('daily_macros');
+  }
+
+  Future<void> insertMealEntry(MealEntry mealEntry) async {
+    final db = await instance.database;
+    await db.insert('meal_entries', {
+      'name': mealEntry.name,
+      'foods': jsonEncode(mealEntry.foods.map((food) => food.toMap()).toList()),
+      'carb': mealEntry.customMacro.carb,
+      'fat': mealEntry.customMacro.fat,
+      'protein': mealEntry.customMacro.protein,
+    });
+  }
+
+  Future<List<MealEntry>> fetchMealEntries() async {
+    final db = await instance.database;
+    final maps = await db.query('meal_entries');
+
+    return List.generate(maps.length, (i) {
+      return MealEntry(
+        id: maps[i]['id'] as int?,
+        name: maps[i]['name'] as String,
+        foods: (jsonDecode(maps[i]['foods'] as String) as List<dynamic>)
+            .map((foodMap) => Food.fromMap(foodMap as Map<String, dynamic>))
+            .toList(),
+        customMacro: Macro(
+          carb: maps[i]['carb'] as double,
+          fat: maps[i]['fat'] as double,
+          protein: maps[i]['protein'] as double,
+        ),
+      );
+    });
+  }
+
+  Future<void> updateMealEntry(MealEntry mealEntry) async {
+    final db = await instance.database;
+    await db.update(
+        'meal_entries',
+        {
+          'name': mealEntry.name,
+          'foods':
+              jsonEncode(mealEntry.foods.map((food) => food.toMap()).toList()),
+          'carb': mealEntry.customMacro.carb,
+          'fat': mealEntry.customMacro.fat,
+          'protein': mealEntry.customMacro.protein,
+        },
+        where: 'id = ?',
+        whereArgs: [mealEntry.id]);
+  }
+
+  Future<void> deleteMealEntry(int id) async {
+    final db = await instance.database;
+    await db.delete('meal_entries', where: 'id = ?', whereArgs: [id]);
   }
 }

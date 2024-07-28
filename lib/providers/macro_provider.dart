@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:macro_tracker/models/food.dart';
 import 'package:macro_tracker/models/macro.dart';
+import 'package:macro_tracker/models/meal_entry.dart';
 import 'package:macro_tracker/services/database_helper.dart';
 
 class MacroProvider with ChangeNotifier {
   Macro _dailyMacros = Macro(carb: 0, fat: 0, protein: 0);
   List<Food> _foods = [];
+  List<MealEntry> _mealEntries = [];
 
   Macro get dailyMacros => _dailyMacros;
   List<Food> get foods => _foods;
+  List<MealEntry> get mealEntries => _mealEntries;
 
   MacroProvider() {
     _loadData();
@@ -17,6 +20,7 @@ class MacroProvider with ChangeNotifier {
   void _loadData() async {
     _dailyMacros = await DatabaseHelper.instance.fetchDailyMacros();
     _foods = await DatabaseHelper.instance.fetchFoods();
+    _mealEntries = await DatabaseHelper.instance.fetchMealEntries();
     notifyListeners();
   }
 
@@ -53,5 +57,42 @@ class MacroProvider with ChangeNotifier {
     await DatabaseHelper.instance.clearDailyMacros();
     _dailyMacros = Macro(carb: 0, fat: 0, protein: 0);
     notifyListeners();
+  }
+
+  void addMealEntry(MealEntry mealEntry) async {
+    await DatabaseHelper.instance.insertMealEntry(mealEntry);
+    _mealEntries = await DatabaseHelper.instance.fetchMealEntries();
+    notifyListeners();
+  }
+
+  void updateMealEntry(MealEntry mealEntry) async {
+    await DatabaseHelper.instance.updateMealEntry(mealEntry);
+    _mealEntries = await DatabaseHelper.instance.fetchMealEntries();
+    notifyListeners();
+  }
+
+  void deleteMealEntry(int id) async {
+    await DatabaseHelper.instance.deleteMealEntry(id);
+    _mealEntries = await DatabaseHelper.instance.fetchMealEntries();
+    notifyListeners();
+  }
+
+  Macro get totalIntake {
+    double totalCarbs = 0;
+    double totalFats = 0;
+    double totalProteins = 0;
+
+    for (var meal in _mealEntries) {
+      for (var food in meal.foods) {
+        totalCarbs += food.macro.carb;
+        totalFats += food.macro.fat;
+        totalProteins += food.macro.protein;
+      }
+      totalCarbs += meal.customMacro.carb;
+      totalFats += meal.customMacro.fat;
+      totalProteins += meal.customMacro.protein;
+    }
+
+    return Macro(carb: totalCarbs, fat: totalFats, protein: totalProteins);
   }
 }

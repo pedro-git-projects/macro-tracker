@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:macro_tracker/screens/add_food_screen.dart';
+import 'package:macro_tracker/screens/add_meal_entry_screen.dart';
 import 'package:macro_tracker/screens/food_list_screen.dart';
+import 'package:macro_tracker/screens/meal_entry_list_screen.dart';
 import 'package:macro_tracker/screens/set_macro_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:macro_tracker/providers/macro_provider.dart';
-import 'package:macro_tracker/widgets/food_list_item.dart';
 import 'package:macro_tracker/widgets/macro_summary.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final macroProvider = Provider.of<MacroProvider>(context);
@@ -46,17 +48,20 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          MacroSummary(macro: macroProvider.dailyMacros),
-          Expanded(
-            child: ListView.builder(
-              itemCount: macroProvider.foods.length,
-              itemBuilder: (context, index) {
-                final food = macroProvider.foods[index];
-                return FoodListItem(food: food);
-              },
-            ),
+          const SizedBox(height: 20),
+          Center(
+            child: Text('Daily Macro Goals',
+                style: Theme.of(context).textTheme.headlineMedium),
           ),
+          MacroSummary(macro: macroProvider.dailyMacros),
+          const SizedBox(height: 20),
+          Center(
+            child: Text('Total Intake',
+                style: Theme.of(context).textTheme.headlineMedium),
+          ),
+          MacroSummary(macro: macroProvider.totalIntake),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -66,6 +71,26 @@ class HomeScreen extends StatelessWidget {
             builder: (context) {
               return Wrap(
                 children: [
+                  ListTile(
+                    leading: const Icon(Icons.edit_note),
+                    title: const Text('Register Meal'),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const AddMealEntryScreen()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.menu_book),
+                    title: const Text('Meal List'),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const MealEntryListScreen()),
+                      );
+                    },
+                  ),
                   ListTile(
                     leading: const Icon(Icons.restaurant),
                     title: const Text('Add Food'),
@@ -78,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   ListTile(
                     leading: const Icon(Icons.list),
-                    title: const Text('Food Register'),
+                    title: const Text('Food List'),
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
