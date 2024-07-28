@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:macro_tracker/screens/set_macro_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:macro_tracker/providers/macro_provider.dart';
 import 'package:macro_tracker/widgets/food_list_item.dart';
@@ -56,11 +57,14 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // Add your code to navigate to add food or add macros screen
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const SetMacroScreen()),
+          );
         },
-        child: const Icon(Icons.add),
+        label: const Text('Set daily goals'),
+        icon: const Icon(Icons.self_improvement),
       ),
     );
   }
