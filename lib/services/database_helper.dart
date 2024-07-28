@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:path/path.dart';
-import 'package:macro_tracker/models/food.dart';
-import 'package:macro_tracker/models/macro.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:macro_tracker/models/food.dart';
+import 'package:macro_tracker/models/macro.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -49,9 +48,20 @@ class DatabaseHelper {
     await db.execute(macroTable);
   }
 
-  Future<void> insertFood(Food food) async {
+  Future<int> insertFood(Food food) async {
     final db = await instance.database;
-    await db.insert('foods', food.toMap());
+    return await db.insert('foods', food.toMap());
+  }
+
+  Future<void> updateFood(Food food) async {
+    final db = await instance.database;
+    await db
+        .update('foods', food.toMap(), where: 'id = ?', whereArgs: [food.id]);
+  }
+
+  Future<void> deleteFood(int id) async {
+    final db = await instance.database;
+    await db.delete('foods', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<void> insertMacro(Macro macro) async {

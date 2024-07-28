@@ -5,7 +5,10 @@ import 'package:macro_tracker/models/food.dart';
 import 'package:macro_tracker/models/macro.dart';
 
 class AddFoodScreen extends StatefulWidget {
-  const AddFoodScreen({super.key});
+  final Food? food;
+  final int? index;
+
+  const AddFoodScreen({super.key, this.food, this.index});
 
   @override
   AddFoodScreenState createState() => AddFoodScreenState();
@@ -18,7 +21,18 @@ class AddFoodScreenState extends State<AddFoodScreen> {
   final TextEditingController _fatController = TextEditingController();
   final TextEditingController _proteinController = TextEditingController();
 
-  void _addFood() {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.food != null) {
+      _nameController.text = widget.food!.name;
+      _carbController.text = widget.food!.macro.carb.toString();
+      _fatController.text = widget.food!.macro.fat.toString();
+      _proteinController.text = widget.food!.macro.protein.toString();
+    }
+  }
+
+  void _addOrUpdateFood() {
     if (_formKey.currentState!.validate()) {
       final String name = _nameController.text;
       final double carbs = double.tryParse(_carbController.text) ?? 0;
@@ -26,10 +40,17 @@ class AddFoodScreenState extends State<AddFoodScreen> {
       final double proteins = double.tryParse(_proteinController.text) ?? 0;
 
       final newFood = Food(
+        id: widget.food?.id, // Preserve the id if updating
         name: name,
         macro: Macro(carb: carbs, fat: fats, protein: proteins),
       );
-      Provider.of<MacroProvider>(context, listen: false).addFood(newFood);
+
+      if (widget.food == null) {
+        Provider.of<MacroProvider>(context, listen: false).addFood(newFood);
+      } else {
+        Provider.of<MacroProvider>(context, listen: false)
+            .updateFood(widget.index!, newFood);
+      }
 
       Navigator.of(context).pop();
     }
@@ -39,7 +60,7 @@ class AddFoodScreenState extends State<AddFoodScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Food'),
+        title: Text(widget.food == null ? 'Add Food' : 'Edit Food'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -92,8 +113,8 @@ class AddFoodScreenState extends State<AddFoodScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _addFood,
-                child: const Text('Add Food'),
+                onPressed: _addOrUpdateFood,
+                child: Text(widget.food == null ? 'Add Food' : 'Update Food'),
               ),
             ],
           ),
@@ -102,3 +123,4 @@ class AddFoodScreenState extends State<AddFoodScreen> {
     );
   }
 }
+

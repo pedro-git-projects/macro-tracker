@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:macro_tracker/screens/add_food_screen.dart';
+import 'package:macro_tracker/screens/food_list_screen.dart';
 import 'package:macro_tracker/screens/set_macro_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:macro_tracker/providers/macro_provider.dart';
@@ -72,6 +73,16 @@ class HomeScreen extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) => const AddFoodScreen()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.list),
+                    title: const Text('Food Register'),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const FoodListScreen()),
                       );
                     },
                   ),
