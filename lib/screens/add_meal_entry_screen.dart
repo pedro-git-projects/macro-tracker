@@ -28,7 +28,8 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
       _nameController.text = widget.mealEntry!.name;
       _carbController.text = widget.mealEntry!.customMacro.carb.toString();
       _fatController.text = widget.mealEntry!.customMacro.fat.toString();
-      _proteinController.text = widget.mealEntry!.customMacro.protein.toString();
+      _proteinController.text =
+          widget.mealEntry!.customMacro.protein.toString();
       _selectedFoods = widget.mealEntry!.foods;
     }
   }
@@ -64,9 +65,11 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
       );
 
       if (widget.mealEntry == null) {
-        Provider.of<MacroProvider>(context, listen: false).addMealEntry(newMealEntry);
+        Provider.of<MacroProvider>(context, listen: false)
+            .addMealEntry(newMealEntry);
       } else {
-        Provider.of<MacroProvider>(context, listen: false).updateMealEntry(newMealEntry);
+        Provider.of<MacroProvider>(context, listen: false)
+            .updateMealEntry(newMealEntry);
       }
 
       Navigator.of(context).pop();
@@ -78,7 +81,8 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
     final macroProvider = Provider.of<MacroProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.mealEntry == null ? 'Add Meal Entry' : 'Edit Meal Entry'),
+        title: Text(
+            widget.mealEntry == null ? 'Add Meal Entry' : 'Edit Meal Entry'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -102,7 +106,7 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
                   itemBuilder: (context, index) {
                     final food = macroProvider.foods[index];
                     return CheckboxListTile(
-                      title: Text(food.name),
+                      title: Text('${food.name} (${food.amount})'),
                       value: _selectedFoods.contains(food),
                       onChanged: (bool? value) {
                         setState(() {
@@ -119,7 +123,8 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
               ),
               TextFormField(
                 controller: _carbController,
-                decoration: const InputDecoration(labelText: 'Additional Carbs (g)'),
+                decoration:
+                    const InputDecoration(labelText: 'Additional Carbs (g)'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   return null;
@@ -127,7 +132,8 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
               ),
               TextFormField(
                 controller: _fatController,
-                decoration: const InputDecoration(labelText: 'Additional Fats (g)'),
+                decoration:
+                    const InputDecoration(labelText: 'Additional Fats (g)'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   return null;
@@ -135,7 +141,8 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
               ),
               TextFormField(
                 controller: _proteinController,
-                decoration: const InputDecoration(labelText: 'Additional Proteins (g)'),
+                decoration:
+                    const InputDecoration(labelText: 'Additional Proteins (g)'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   return null;
@@ -144,7 +151,9 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _addOrUpdateMealEntry,
-                child: Text(widget.mealEntry == null ? 'Add Meal Entry' : 'Update Meal Entry'),
+                child: Text(widget.mealEntry == null
+                    ? 'Add Meal Entry'
+                    : 'Update Meal Entry'),
               ),
             ],
           ),
@@ -153,4 +162,3 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
     );
   }
 }
-

@@ -20,6 +20,7 @@ class AddFoodScreenState extends State<AddFoodScreen> {
   final TextEditingController _carbController = TextEditingController();
   final TextEditingController _fatController = TextEditingController();
   final TextEditingController _proteinController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
 
   @override
   void initState() {
@@ -29,6 +30,7 @@ class AddFoodScreenState extends State<AddFoodScreen> {
       _carbController.text = widget.food!.macro.carb.toString();
       _fatController.text = widget.food!.macro.fat.toString();
       _proteinController.text = widget.food!.macro.protein.toString();
+      _amountController.text = widget.food!.amount;
     }
   }
 
@@ -38,11 +40,13 @@ class AddFoodScreenState extends State<AddFoodScreen> {
       final double carbs = double.tryParse(_carbController.text) ?? 0;
       final double fats = double.tryParse(_fatController.text) ?? 0;
       final double proteins = double.tryParse(_proteinController.text) ?? 0;
+      final String amount = _amountController.text;
 
       final newFood = Food(
         id: widget.food?.id, // Preserve the id if updating
         name: name,
         macro: Macro(carb: carbs, fat: fats, protein: proteins),
+        amount: amount,
       );
 
       if (widget.food == null) {
@@ -107,6 +111,16 @@ class AddFoodScreenState extends State<AddFoodScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a value';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _amountController,
+                decoration: const InputDecoration(labelText: 'Amount'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter an amount';
                   }
                   return null;
                 },

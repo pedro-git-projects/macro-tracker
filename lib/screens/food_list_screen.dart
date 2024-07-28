@@ -8,8 +8,6 @@ class FoodListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final macroProvider = Provider.of<MacroProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Food List'),
@@ -23,7 +21,7 @@ class FoodListScreen extends StatelessWidget {
               return ListTile(
                 title: Text(food.name),
                 subtitle: Text(
-                    'Carbs: ${food.macro.carb}g, Fats: ${food.macro.fat}g, Proteins: ${food.macro.protein}g'),
+                    'Amount: ${food.amount}, Carbs: ${food.macro.carb}g, Fats: ${food.macro.fat}g, Proteins: ${food.macro.protein}g'),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

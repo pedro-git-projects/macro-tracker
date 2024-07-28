@@ -4,8 +4,10 @@ class Food {
   final int? id;
   final String name;
   final Macro macro;
+  final String amount;
 
-  Food({this.id, required this.name, required this.macro});
+  Food(
+      {this.id, required this.name, required this.macro, required this.amount});
 
   Map<String, dynamic> toMap() {
     return {
@@ -14,6 +16,7 @@ class Food {
       'carb': macro.carb,
       'fat': macro.fat,
       'protein': macro.protein,
+      'amount': amount,
     };
   }
 
@@ -26,7 +29,7 @@ class Food {
         fat: map['fat'],
         protein: map['protein'],
       ),
+      amount: map['amount'],
     );
   }
 }
-

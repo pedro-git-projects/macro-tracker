@@ -26,7 +26,7 @@ class MacroProvider with ChangeNotifier {
 
   void addFood(Food food) async {
     int id = await DatabaseHelper.instance.insertFood(food);
-    food = Food(id: id, name: food.name, macro: food.macro);
+    food = Food(id: id, name: food.name, macro: food.macro, amount: food.amount);
     _foods.add(food);
     notifyListeners();
   }

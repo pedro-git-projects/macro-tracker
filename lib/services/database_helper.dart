@@ -33,7 +33,8 @@ class DatabaseHelper {
       name TEXT NOT NULL,
       carb REAL NOT NULL,
       fat REAL NOT NULL,
-      protein REAL NOT NULL
+      protein REAL NOT NULL,
+      amount TEXT NOT NULL
     );
     ''';
 
