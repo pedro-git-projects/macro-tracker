@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:macro_tracker/screens/add_food_screen.dart';
 import 'package:macro_tracker/screens/set_macro_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:macro_tracker/providers/macro_provider.dart';
@@ -59,12 +60,38 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const SetMacroScreen()),
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Wrap(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.restaurant),
+                    title: const Text('Add Food'),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const AddFoodScreen()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.self_improvement),
+                    title: const Text('Set Daily Goals'),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const SetMacroScreen()),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
           );
         },
-        label: const Text('Set daily goals'),
-        icon: const Icon(Icons.self_improvement),
+        label: const Text('Options'),
+        icon: const Icon(Icons.add),
       ),
     );
   }
