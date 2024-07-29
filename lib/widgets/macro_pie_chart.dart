@@ -85,7 +85,7 @@ class MacroPieChart extends StatelessWidget {
         value: goalPercentage,
         title: '${goalPercentage.toStringAsFixed(1)}%',
         radius: 50,
-        titleStyle: TextStyle(
+        titleStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.white,
@@ -96,7 +96,7 @@ class MacroPieChart extends StatelessWidget {
         value: consumedPercentage,
         title: '${consumedPercentage.toStringAsFixed(1)}%',
         radius: 50,
-        titleStyle: TextStyle(
+        titleStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.white,
@@ -139,13 +139,13 @@ class Indicator extends StatelessWidget {
   final Color textColor;
 
   const Indicator({
-    Key? key,
+    super.key,
     required this.color,
     required this.text,
     this.isSquare = true,
     this.size = 16,
     this.textColor = const Color(0xff505050),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

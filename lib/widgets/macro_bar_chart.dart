@@ -60,7 +60,7 @@ class MacroBarChart extends StatelessWidget {
         BarChartData(
           alignment: BarChartAlignment.spaceAround,
           maxY: _getMaxY(),
-          gridData: FlGridData(show: false),
+          gridData: const FlGridData(show: false),
           barTouchData: BarTouchData(
             enabled: false,
             touchTooltipData: BarTouchTooltipData(
@@ -81,14 +81,14 @@ class MacroBarChart extends StatelessWidget {
             ),
           ),
           titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
+            leftTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
                 getTitlesWidget: (double value, TitleMeta meta) {
-                  final style = TextStyle(
+                  const style = TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -98,34 +98,34 @@ class MacroBarChart extends StatelessWidget {
                       return SideTitleWidget(
                         axisSide: meta.axisSide,
                         space: 4,
-                        child: Text('Carbs', style: style),
+                        child: const Text('Carbs', style: style),
                       );
                     case 1:
                       return SideTitleWidget(
                         axisSide: meta.axisSide,
                         space: 4,
-                        child: Text('Fats', style: style),
+                        child: const Text('Fats', style: style),
                       );
                     case 2:
                       return SideTitleWidget(
                         axisSide: meta.axisSide,
                         space: 4,
-                        child: Text('Proteins', style: style),
+                        child: const Text('Proteins', style: style),
                       );
                     default:
                       return SideTitleWidget(
                         axisSide: meta.axisSide,
                         space: 4,
-                        child: Text('', style: style),
+                        child: const Text('', style: style),
                       );
                   }
                 },
               ),
             ),
-            topTitles: AxisTitles(
+            topTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),
-            rightTitles: AxisTitles(
+            rightTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),
           ),
