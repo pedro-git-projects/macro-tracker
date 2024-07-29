@@ -150,8 +150,8 @@ class HomeScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const AddMealEntryScreen()),
           );
         },
-        child: const Icon(Icons.add),
         tooltip: 'Add Meal',
+        child: const Icon(Icons.add),
       ),
     );
   }
