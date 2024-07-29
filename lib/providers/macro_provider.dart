@@ -21,12 +21,46 @@ class MacroProvider with ChangeNotifier {
     _dailyMacros = await DatabaseHelper.instance.fetchDailyMacros();
     _foods = await DatabaseHelper.instance.fetchFoods();
     _mealEntries = await DatabaseHelper.instance.fetchMealEntries();
+
+    assert(
+        _dailyMacros.carb.isFinite, '_dailyMacros carb value should be finite');
+    assert(
+        _dailyMacros.fat.isFinite, '_dailyMacros fat value should be finite');
+    assert(_dailyMacros.protein.isFinite,
+        '_dailyMacros protein value should be finite');
+
+    for (var food in _foods) {
+      assert(
+          food.macro.carb.isFinite, 'food macro carb value should be finite');
+      assert(food.macro.fat.isFinite, 'food macro fat value should be finite');
+      assert(food.macro.protein.isFinite,
+          'food macro protein value should be finite');
+    }
+
+    for (var meal in _mealEntries) {
+      for (var food in meal.foods) {
+        assert(food.macro.carb.isFinite,
+            'meal food macro carb value should be finite');
+        assert(food.macro.fat.isFinite,
+            'meal food macro fat value should be finite');
+        assert(food.macro.protein.isFinite,
+            'meal food macro protein value should be finite');
+      }
+      assert(meal.customMacro.carb.isFinite,
+          'meal customMacro carb value should be finite');
+      assert(meal.customMacro.fat.isFinite,
+          'meal customMacro fat value should be finite');
+      assert(meal.customMacro.protein.isFinite,
+          'meal customMacro protein value should be finite');
+    }
+
     notifyListeners();
   }
 
   void addFood(Food food) async {
     int id = await DatabaseHelper.instance.insertFood(food);
-    food = Food(id: id, name: food.name, macro: food.macro, amount: food.amount);
+    food =
+        Food(id: id, name: food.name, macro: food.macro, amount: food.amount);
     _foods.add(food);
     notifyListeners();
   }

@@ -8,16 +8,51 @@ class MacroSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text('Daily Macros:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        Text('Carbs: ${macro.carb.toStringAsFixed(2)}g'),
-        Text('Fats: ${macro.fat.toStringAsFixed(2)}g'),
-        Text('Proteins: ${macro.protein.toStringAsFixed(2)}g'),
-        Text('Calories: ${macro.calories.toStringAsFixed(2)} kcal',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-      ],
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                const SizedBox(width: 8),
+                Text('Carbs: ${macro.carb.toInt()}g',
+                    style: const TextStyle(fontSize: 16)),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const SizedBox(width: 8),
+                Text('Fats: ${macro.fat.toInt()}g',
+                    style: const TextStyle(fontSize: 16)),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const SizedBox(width: 8),
+                Text('Proteins: ${macro.protein.toInt()}g',
+                    style: const TextStyle(fontSize: 16)),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const SizedBox(width: 8),
+                Text('Calories: ${macro.calories.toInt()} kcal',
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
