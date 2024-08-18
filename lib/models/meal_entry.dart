@@ -1,10 +1,11 @@
+import 'package:macro_tracker/models/meal_food.dart';
+
 import 'macro.dart';
-import 'food.dart';
 
 class MealEntry {
   final int? id;
   final String name;
-  final List<Food> foods;
+  final List<MealFood> mealFoods;
   final Macro customMacro;
 
   static int _mealCounter = 1;
@@ -12,7 +13,7 @@ class MealEntry {
   MealEntry({
     this.id,
     String? name,
-    required this.foods,
+    required this.mealFoods,
     required this.customMacro,
   }) : name = (name == null || name.isEmpty) ? 'Meal $_mealCounter' : name {
     if (name == null || name.isEmpty) {
@@ -24,7 +25,7 @@ class MealEntry {
     return {
       'id': id,
       'name': name,
-      'foods': foods.map((food) => food.toMap()).toList(),
+      'foods': mealFoods.map((food) => food.toMap()).toList(),
       'carb': customMacro.carb,
       'fat': customMacro.fat,
       'protein': customMacro.protein,
@@ -35,8 +36,8 @@ class MealEntry {
     return MealEntry(
       id: map['id'],
       name: map['name'],
-      foods: (map['foods'] as List)
-          .map((foodMap) => Food.fromMap(foodMap))
+      mealFoods: (map['mealFoods'] as List)
+          .map((foodMap) => MealFood.fromMap(foodMap))
           .toList(),
       customMacro: Macro(
         carb: map['carb'],

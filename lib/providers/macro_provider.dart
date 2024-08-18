@@ -38,7 +38,8 @@ class MacroProvider with ChangeNotifier {
     }
 
     for (var meal in _mealEntries) {
-      for (var food in meal.foods) {
+      for (var mealFood in meal.mealFoods) {
+        final food = mealFood.food;
         assert(food.macro.carb.isFinite,
             'meal food macro carb value should be finite');
         assert(food.macro.fat.isFinite,
@@ -117,23 +118,17 @@ class MacroProvider with ChangeNotifier {
     double totalProteins = 0;
 
     for (var meal in _mealEntries) {
-      for (var food in meal.foods) {
-        print(
-            'Adding food: ${food.name} - Carbs: ${food.macro.carb}, Fats: ${food.macro.fat}, Proteins: ${food.macro.protein}');
-        totalCarbs += food.macro.carb;
-        totalFats += food.macro.fat;
-        totalProteins += food.macro.protein;
+      for (var mealFood in meal.mealFoods) {
+        totalCarbs += mealFood.food.macro.carb * mealFood.amount;
+        totalFats += mealFood.food.macro.fat * mealFood.amount;
+        totalProteins += mealFood.food.macro.protein * mealFood.amount;
       }
 
-      print(
-          'Adding customMacro: Carbs: ${meal.customMacro.carb}, Fats: ${meal.customMacro.fat}, Proteins: ${meal.customMacro.protein}');
       totalCarbs += meal.customMacro.carb;
       totalFats += meal.customMacro.fat;
       totalProteins += meal.customMacro.protein;
     }
 
-    print(
-        'Total Carbs: $totalCarbs, Total Fats: $totalFats, Total Proteins: $totalProteins');
     return Macro(carb: totalCarbs, fat: totalFats, protein: totalProteins);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:macro_tracker/models/meal_food.dart';
 import 'package:macro_tracker/providers/macro_provider.dart';
-import 'package:macro_tracker/models/food.dart';
 import 'package:macro_tracker/models/macro.dart';
 import 'package:macro_tracker/models/meal_entry.dart';
 
@@ -19,7 +19,7 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
   final TextEditingController _carbController = TextEditingController();
   final TextEditingController _fatController = TextEditingController();
   final TextEditingController _proteinController = TextEditingController();
-  List<Food> _selectedFoods = [];
+  List<MealFood> _selectedFoods = [];
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
       _fatController.text = widget.mealEntry!.customMacro.fat.toString();
       _proteinController.text =
           widget.mealEntry!.customMacro.protein.toString();
-      _selectedFoods = widget.mealEntry!.foods;
+      _selectedFoods = widget.mealEntry!.mealFoods;
     }
   }
 
@@ -40,27 +40,16 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
     double totalProteins = 0;
 
     // Sum the macros from the selected foods
-    for (var food in _selectedFoods) {
-      totalCarbs += food.macro.carb;
-      totalFats += food.macro.fat;
-      totalProteins += food.macro.protein;
+    for (var mealFood in _selectedFoods) {
+      totalCarbs += mealFood.food.macro.carb * mealFood.amount;
+      totalFats += mealFood.food.macro.fat * mealFood.amount;
+      totalProteins += mealFood.food.macro.protein * mealFood.amount;
     }
 
-    // Replace or add the custom macros
-    double customCarbs = double.tryParse(_carbController.text) ?? 0;
-    double customFats = double.tryParse(_fatController.text) ?? 0;
-    double customProteins = double.tryParse(_proteinController.text) ?? 0;
-
-    // If custom macros are provided, override the food macros
-    if (customCarbs > 0) {
-      totalCarbs = customCarbs;
-    }
-    if (customFats > 0) {
-      totalFats = customFats;
-    }
-    if (customProteins > 0) {
-      totalProteins = customProteins;
-    }
+    // Add custom macros
+    totalCarbs += double.tryParse(_carbController.text) ?? 0;
+    totalFats += double.tryParse(_fatController.text) ?? 0;
+    totalProteins += double.tryParse(_proteinController.text) ?? 0;
 
     return Macro(carb: totalCarbs, fat: totalFats, protein: totalProteins);
   }
@@ -73,7 +62,7 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
       final newMealEntry = MealEntry(
         id: widget.mealEntry?.id,
         name: name,
-        foods: _selectedFoods,
+        mealFoods: _selectedFoods,
         customMacro: totalMacro,
       );
 
@@ -115,18 +104,51 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
                   itemCount: macroProvider.foods.length,
                   itemBuilder: (context, index) {
                     final food = macroProvider.foods[index];
-                    return CheckboxListTile(
-                      title: Text('${food.name} (${food.serving})'),
-                      value: _selectedFoods.contains(food),
-                      onChanged: (bool? value) {
-                        setState(() {
-                          if (value == true) {
-                            _selectedFoods.add(food);
-                          } else {
-                            _selectedFoods.remove(food);
-                          }
-                        });
-                      },
+                    MealFood? mealFood = _selectedFoods.firstWhere(
+                      (mf) => mf.food.id == food.id,
+                      orElse: () => MealFood(food: food),
+                    );
+
+                    return Row(
+                      children: [
+                        Checkbox(
+                          value:
+                              _selectedFoods.any((mf) => mf.food.id == food.id),
+                          onChanged: (bool? value) {
+                            setState(() {
+                              if (value == true) {
+                                _selectedFoods.add(MealFood(food: food));
+                              } else {
+                                _selectedFoods
+                                    .removeWhere((mf) => mf.food.id == food.id);
+                              }
+                            });
+                          },
+                        ),
+                        Expanded(
+                          child: Text('${food.name} (${food.serving})'),
+                        ),
+                        SizedBox(
+                          width: 50,
+                          child: TextFormField(
+                            initialValue: mealFood.amount.toString(),
+                            decoration:
+                                const InputDecoration(labelText: 'Amount'),
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) {
+                              final amount = int.tryParse(value) ?? 1;
+                              setState(() {
+                                final index = _selectedFoods
+                                    .indexWhere((mf) => mf.food.id == food.id);
+                                if (index != -1) {
+                                  _selectedFoods[index] =
+                                      MealFood(food: food, amount: amount);
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
