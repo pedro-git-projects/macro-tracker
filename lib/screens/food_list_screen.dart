@@ -21,7 +21,7 @@ class FoodListScreen extends StatelessWidget {
               return ListTile(
                 title: Text(food.name),
                 subtitle: Text(
-                    'Amount: ${food.amount}, Carbs: ${food.macro.carb}g, Fats: ${food.macro.fat}g, Proteins: ${food.macro.protein}g'),
+                    'Serving Size: ${food.serving}, Carbs: ${food.macro.carb}g, Fats: ${food.macro.fat}g, Proteins: ${food.macro.protein}g'),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

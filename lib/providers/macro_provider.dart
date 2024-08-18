@@ -60,7 +60,7 @@ class MacroProvider with ChangeNotifier {
   void addFood(Food food) async {
     int id = await DatabaseHelper.instance.insertFood(food);
     food =
-        Food(id: id, name: food.name, macro: food.macro, amount: food.amount);
+        Food(id: id, name: food.name, macro: food.macro, serving: food.serving);
     _foods.add(food);
     notifyListeners();
   }
@@ -118,15 +118,22 @@ class MacroProvider with ChangeNotifier {
 
     for (var meal in _mealEntries) {
       for (var food in meal.foods) {
+        print(
+            'Adding food: ${food.name} - Carbs: ${food.macro.carb}, Fats: ${food.macro.fat}, Proteins: ${food.macro.protein}');
         totalCarbs += food.macro.carb;
         totalFats += food.macro.fat;
         totalProteins += food.macro.protein;
       }
+
+      print(
+          'Adding customMacro: Carbs: ${meal.customMacro.carb}, Fats: ${meal.customMacro.fat}, Proteins: ${meal.customMacro.protein}');
       totalCarbs += meal.customMacro.carb;
       totalFats += meal.customMacro.fat;
       totalProteins += meal.customMacro.protein;
     }
 
+    print(
+        'Total Carbs: $totalCarbs, Total Fats: $totalFats, Total Proteins: $totalProteins');
     return Macro(carb: totalCarbs, fat: totalFats, protein: totalProteins);
   }
 }

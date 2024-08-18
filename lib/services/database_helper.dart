@@ -34,7 +34,7 @@ class DatabaseHelper {
       carb REAL NOT NULL,
       fat REAL NOT NULL,
       protein REAL NOT NULL,
-      amount TEXT NOT NULL
+      serving TEXT NOT NULL
     );
     ''';
 

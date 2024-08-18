@@ -7,7 +7,18 @@ class MealEntry {
   final List<Food> foods;
   final Macro customMacro;
 
-  MealEntry({this.id, required this.name, required this.foods, required this.customMacro});
+  static int _mealCounter = 1;
+
+  MealEntry({
+    this.id,
+    String? name,
+    required this.foods,
+    required this.customMacro,
+  }) : name = (name == null || name.isEmpty) ? 'Meal $_mealCounter' : name {
+    if (name == null || name.isEmpty) {
+      _mealCounter++;
+    }
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -24,7 +35,9 @@ class MealEntry {
     return MealEntry(
       id: map['id'],
       name: map['name'],
-      foods: (map['foods'] as List).map((foodMap) => Food.fromMap(foodMap)).toList(),
+      foods: (map['foods'] as List)
+          .map((foodMap) => Food.fromMap(foodMap))
+          .toList(),
       customMacro: Macro(
         carb: map['carb'],
         fat: map['fat'],

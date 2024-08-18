@@ -39,15 +39,28 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
     double totalFats = 0;
     double totalProteins = 0;
 
+    // Sum the macros from the selected foods
     for (var food in _selectedFoods) {
       totalCarbs += food.macro.carb;
       totalFats += food.macro.fat;
       totalProteins += food.macro.protein;
     }
 
-    totalCarbs += double.tryParse(_carbController.text) ?? 0;
-    totalFats += double.tryParse(_fatController.text) ?? 0;
-    totalProteins += double.tryParse(_proteinController.text) ?? 0;
+    // Replace or add the custom macros
+    double customCarbs = double.tryParse(_carbController.text) ?? 0;
+    double customFats = double.tryParse(_fatController.text) ?? 0;
+    double customProteins = double.tryParse(_proteinController.text) ?? 0;
+
+    // If custom macros are provided, override the food macros
+    if (customCarbs > 0) {
+      totalCarbs = customCarbs;
+    }
+    if (customFats > 0) {
+      totalFats = customFats;
+    }
+    if (customProteins > 0) {
+      totalProteins = customProteins;
+    }
 
     return Macro(carb: totalCarbs, fat: totalFats, protein: totalProteins);
   }
@@ -94,9 +107,6 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: 'Meal Name'),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a meal name';
-                  }
                   return null;
                 },
               ),
@@ -106,7 +116,7 @@ class AddMealEntryScreenState extends State<AddMealEntryScreen> {
                   itemBuilder: (context, index) {
                     final food = macroProvider.foods[index];
                     return CheckboxListTile(
-                      title: Text('${food.name} (${food.amount})'),
+                      title: Text('${food.name} (${food.serving})'),
                       value: _selectedFoods.contains(food),
                       onChanged: (bool? value) {
                         setState(() {
